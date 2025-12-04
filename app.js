@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const connect = require("./routes/contact");
 
 require("./conn/connection");
@@ -14,14 +13,15 @@ app.use(express.json());
 // API routes
 app.use("/api/v1/contact", connect);
 
-// Serve frontend build
-// const frontendPath = path.join(__dirname, "frontend", "dist");
-// app.use(express.static(frontendPath));
+// 🔹 Default route to prevent 404 on GET /
+app.get("/", (req, res) => {
+  res.send("Backend is running! Use /api/v1/contact for API requests.");
+});
 
-// CATCH ALL (Express v5 safe — NO '*')
-// app.use((req, res) => {
-//   res.sendFile(path.join(frontendPath, "index.html"));
-// });
+// Optional: 404 handler for other unknown routes
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
 
 // Start server
 const PORT = process.env.PORT || 1000;
